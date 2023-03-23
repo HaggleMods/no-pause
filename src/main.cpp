@@ -2,30 +2,17 @@
 #include <callbacks/callbacks.hpp>
 #include <MinHook.h>
 
+static void(__fastcall* Sexy__ThunderballApp_LostFocus_)(Sexy::ThunderballApp*, char*);
+void __fastcall Sexy__ThunderballApp_LostFocus(Sexy::ThunderballApp* this_, char* edx)
+{
+	//return Sexy__ThunderballApp_LostFocus_(this_, edx);
+}
+
 void init()
 {
 	MH_Initialize();
 
-
-	//Some useful callbacks
-	//Check out callbacks.hpp for more!
-
-
-	callbacks::on(callbacks::type::begin_turn_2, []()
-	{
-	});
-
-	callbacks::on(callbacks::type::do_level_done, []()
-	{
-	});
-
-	callbacks::on(callbacks::type::do_to_menu, []()
-	{
-	});
-
-	callbacks::on(callbacks::type::main_loop, []()
-	{
-	});
+	MH_CreateHook((void*)0x00408470, Sexy__ThunderballApp_LostFocus, (void**)&Sexy__ThunderballApp_LostFocus_);
 
 	MH_EnableHook(MH_ALL_HOOKS);
 }
