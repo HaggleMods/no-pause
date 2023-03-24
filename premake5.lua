@@ -60,7 +60,7 @@ workspace(mod_name)
 	project(mod_name)
 		targetname(mod_name)
 		language "c++"
-		cppdialect "c++17"
+		cppdialect "c++20"
 		kind "sharedlib"
 		warnings "off"
 
@@ -68,20 +68,27 @@ workspace(mod_name)
 		pchsource "./src/stdafx.cpp"
 		forceincludes "stdafx.hpp"
 
+		defines {
+			"MOD_NAME=\"" .. mod_name .. "\"",
+		}
+
 		dependson {
 			"MinHook",
 			"Haggle",
+			"ini_rw",
 		}
 
 		links {
 			"MinHook",
 			"Haggle",
+			"ini_rw",
 		}
 
 		includedirs {
 			"./src/",
 			"./deps/minhook/include/",
 			"./deps/haggle/src/haggle/",
+			"./deps/ini_rw/src/",
 		}
 
 		files {
@@ -137,4 +144,16 @@ workspace(mod_name)
 
 		postbuildcommands {
 			"copy /y \"$(TargetPath)\" \"C:\\Program Files (x86)\\Steam\\steamapps\\common\\Peggle Deluxe\\mods\\\"",
+		}
+
+	project "ini_rw"
+		language "c"
+		kind "staticlib"
+
+		files {
+			"./deps/ini_rw/src/**",
+		}
+
+		includedirs {
+			"./deps/ini_rw/src/",
 		}
