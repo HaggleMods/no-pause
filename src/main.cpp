@@ -1,16 +1,19 @@
 #include <sdk/SexySDK.hpp>
-#include <callbacks/callbacks.hpp>
 #include <MinHook.h>
 #include <filesystem>
 #include <ini_rw.h>
 
 bool keep_audio = true;
 
-static void(__fastcall* Sexy__ThunderballApp__LostFocus_)(Sexy::ThunderballApp*, char*);
-void __fastcall Sexy__ThunderballApp__LostFocus(Sexy::ThunderballApp* this_, char* edx)
+static LONG(__stdcall* Sexy__SexyAppBase__WindowProc_)(HWND, UINT, WPARAM, int);
+LONG __stdcall Sexy__SexyAppBase__WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, int lParam)
 {
-	//Basically just do nothing
-	//Sexy__ThunderballApp_LostFocus_(this_, edx);
+	if (Msg == WM_ACTIVATEAPP && wParam == 0)
+	{
+		return 1;
+	}
+
+	return Sexy__SexyAppBase__WindowProc_(hWnd, Msg, wParam, lParam);
 }
 
 bool get_boolean(const char* bool_text)
@@ -45,7 +48,7 @@ void init()
 
 	MH_Initialize();
 
-	MH_CreateHook((void*)0x00408470, Sexy__ThunderballApp__LostFocus, (void**)&Sexy__ThunderballApp__LostFocus_);
+	MH_CreateHook((void*)0x00534490, Sexy__SexyAppBase__WindowProc, (void**)&Sexy__SexyAppBase__WindowProc_);
 
 	MH_EnableHook(MH_ALL_HOOKS);
 }
